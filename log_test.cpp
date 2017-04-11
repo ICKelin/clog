@@ -19,11 +19,8 @@ void *thread_func(void *args) {
 	for (int i = 0; i < 100; i++) {
 		_printlog(__FILE__, __LINE__, PRIORITY_UNKNOWN, "test tid %d",i);
 	}
+	return 0;
 }
-
-#ifdef _WIN32
-typedef pthread_t HANDLE;
-#endif
 
 int main() {
 	initlogs("", 1000, "./", 1, 1024);
@@ -40,10 +37,14 @@ int main() {
 	_printlog(__FILE__, __LINE__, PRIORITY_FATAL, "test");
 
 	// 多线程测试
+#ifdef _WIN32
+	HANDLE tids[4];
+#else
 	pthread_t tids[4];
+#endif
 	for (int i = 0; i < 4; i++) {
 #ifdef _WIN32
-		tids[i] = CreateThread(NULL, 0, thread_func)
+		tids[i] = CreateThread(NULL, 0, thread_func, NULL, 0, NULL);
 #else
 		pthread_create(&tids[i], NULL, thread_func, NULL);
 #endif
