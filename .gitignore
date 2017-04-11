@@ -1,4 +1,4 @@
-./*.o
-./*.log
+*.o
+*.log
 log_test
 
